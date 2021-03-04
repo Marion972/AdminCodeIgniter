@@ -27,13 +27,22 @@ class BaseController extends Controller
 	 *
 	 * @var array
 	 */
-	protected $helpers = [];
+	public function __construct(){
+		
+		//include helper form
+        helper('form');
 
-	public function __construct()
-	{
-		helper(['form']);
+		$this->session = \Config\Services::session();
+		$this->session->start();
 	}
-
+	/**
+	 * An array of helpers to be loaded automatically upon
+	 * class instantiation. These helpers will be available
+	 * to all other controllers that extend BaseController.
+	 *
+	 * @var array
+	 */
+	protected $helpers = [];
 	/**
 	 * Constructor.
 	 *

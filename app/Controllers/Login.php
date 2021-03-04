@@ -30,7 +30,7 @@ class Login extends BaseController
             'email'         => 'required|min_length[6]|max_length[50]|valid_email',
             'password'      => 'required|min_length[6]|max_length[200]'
         ];
-         
+
         if($this->validate($rules))
 		{
             $userModel = new UserModel();
@@ -45,8 +45,13 @@ class Login extends BaseController
 					   $pwd = $user['userPassword'];
 					   if(password_verify($data['userPassword'], $pwd))
 					   {
-						   return $user['userId'];
-					   } 
+						return redirect()->to('/Admin/Accueil');
+					   } else{
+						   
+						echo view('common/HeaderAdmin' , 	$data);
+						echo view('Site/Login',['error'=> true]);
+						echo view('common/FooterSite');
+					   }
 				   }
         }  
 			
@@ -61,6 +66,12 @@ class Login extends BaseController
 			echo view('common/FooterSite');
         
          
+    }
+
+	public function Logout()
+    {
+        $this->session->sess_destroy();
+        redirect()->to('/Site/Login');
     }
 }
 
