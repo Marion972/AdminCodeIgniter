@@ -27,39 +27,39 @@
                                         <th>
                                             <span>ID</span>
                                         </th>
-                                        <th>Nom</th>
-                                        <th>Prénom</th>
-                                        <th>Année de naissance</th>
-                                        <th>Nombre de film</th>
+                                        <th>Nom du film</th>
+                                        <th>Nom de l'acteur</th>
+                                        <th>Nom du rôle</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
                                     <?php
-                                    if(isset($tabArtists)) {
-                                    foreach($tabArtists as $artist ){ 
-                                        
+                                    if(isset($tabRoles)) {
+                                    foreach($tabRoles as $role ){ 
+                                        $artist = $artistModel->where('id', $role["id_acteur"])->first();
+                                        $films = $filmModel->where('id', $role["id_film"])->first();
                                     ?>
                                         <tr>
                                             <td></td>
                                             <td></td>
                                             <td>
-                                                <a href="app-invoice-view.html"><?php echo $artist['id']; ?></a>
+                                                <a href="app-invoice-view.html"><?php echo $artist["id"]; ?></a>
                                             </td>
-                                            <td><span class="invoice-amount"><?php echo $artist['nom']; ?></span></td>
-                                            <td><small><?php echo $artist['prenom']; ?></small></td>
-                                            <td><span class="invoice-customer"><?php echo $artist['annee_naissance']; ?></span></td>
+                                            <td><span class="invoice-amount"><?php echo $films["titre"]; ?></span></td>
+                                            <td><small><?php echo $artist["nom"]; ?></small></td>
+                                            <td><span class="invoice-customer"><?php echo $role["nom_role"]; ?></span></td>
                                             <td>
                                                 <span class="bullet green"></span>
                                                 <small></small>
                                             </td>
                                             <td>
                                                 <div class="invoice-action">
-                                                    <a href="<?php echo base_url("admin/artiste/delete/".$artist['id']); ?>" class="invoice-action-view mr-4">
+                                                    <a href="<?php echo base_url("admin/role/delete/".$role["id_film"].$role["id_acteur"]); ?>" class="invoice-action-view mr-4">
                                                         <i class="material-icons">delete</i>
                                                     </a>
-                                                    <a href="<?php echo base_url("admin/artiste/edit/".$artist['id']); ?>" class="invoice-action-edit">
+                                                    <a href="<?php echo base_url("admin/role/edit/".$role["id_film"].$role["id_acteur"]); ?>" class="invoice-action-edit">
                                                         <i class="material-icons">edit</i>
                                                     </a>
                                                 </div>

@@ -3,59 +3,66 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Models\RoleModel;
 use App\Models\ArtisteModel;
+use App\Models\FilmModel;
 
-class Artiste extends BaseController
+class Role extends BaseController
 {
-	public $artistModels = NULL;
+	public $roleModels = NULL;
+	public $filmModels = NULL;
 
 	public function __construct(){
-		$this->artistModels = new ArtisteModel();
+		$this->roleModels = new RoleModel();
+		$this->artistModel = new ArtisteModel();
+		$this->filmModels = new FilmModel();
 	}
 
 	public function index()
 	{	
-		$listArtists = $this->artistModels->findAll();
+		$listRole = $this->roleModels->find();
 		//dd($listArtists);
 		/** exemple de passage de variable a une vue */ 
 		$data = [
 			'page_title' => 'Connexion à wwww.site.com' ,
 			'aff_menu'  => true,
-			'tabArtists' => $this->artistModels->orderBy('id', 'DESC')->paginate(10),
-			'pager' => $this->artistModels->pager,			
+			'artistModel' => $this->artistModel,
+			'filmModel' => $this->filmModels,
+			'tabRoles' => $this->roleModels->orderBy('id_acteur', 'DESC')->paginate(10),
+			'pager' => $this->roleModels->pager,			
 		];
 
 	
 		echo view('common/HeaderAdmin', $data);
-		echo view('Admin/Artiste/List', $data);
+		echo view('Admin/Role/List', $data);
 		echo view('common/FooterSite');
 	}
 	
 	public function edit($id=NUll){
-		$artist = $this->artistModels->where('id', $id)
+		$role = $this->RoleModels->where('id', $id)
 									 ->first();
 		
 		//Je controle si je viens de mon formulaire
 		if(!empty($this->request->getVar('save'))){//On vérifie que la variable save existe, si elle existe sa veut dire qu'on' a poster le formulaire.
 			  //set rules validation form
 			  $rules = [//rules pour règles en français ; ici Rules nous permet de controler les données saisies dans le formulaire. 
-				'artistName'          => 'required|min_length[3]|max_length[20]',// ici artistName est requis, longueur minimale 3, longueur maximale 20.
-				'artistPrenom'         => 'required|min_length[6]|max_length[20]',
-				'artistNaissance'      => 'required',
+				'nomFilm'          => 'required|min_length[3]|max_length[20]',// ici artistName est requis, longueur minimale 3, longueur maximale 20.
+				'nomActeur'         => 'required|min_length[6]|max_length[20]',
+				'nomRole'      => 'required',
 			];
 		 
 		if($this->validate($rules)){
 			$data = [
-				'nom'     => $this->request->getVar('artistName'),
-				'prenom'    => $this->request->getVar('artistPrenom'),
-				'annee_naissance' => $this->request->getVar('artistNaissance'),
+				'nomFilm'     => $this->request->getVar('filmName'),
+				'nomActeur'    => $this->request->getVar('actorName'),
+				'nomRole' => $this->request->getVar('roleName'),
 			];
 			if($this->request->getVar('save') == "update"){
-				$this->artistModels->where('id', $id)
+				$this->roleModels->where('id', $id)
 							   ->set($data)->update();
 			}else {
-				$this->artistModels->save($data);			
-				redirect()->to('/Admin/artiste/');
+				$this->roleModels->save($data);			
+				redirect()->to('/Admin/role/');
 			}
 
 			
@@ -68,12 +75,12 @@ class Artiste extends BaseController
 		$data = [
 		'page_title' => 'Connexion à wwww.site.com' ,
 		'aff_menu'  => true,
-		'formArtist' => $artist,
+		'formRole' => $role,
 			
 		
 	];
 		echo view('common/HeaderAdmin', $data);
-		echo view('Admin/Artiste/Edit', $data);
+		echo view('Admin/Role/Edit', $data);
 		echo view('common/FooterSite');
 		
 		
@@ -82,6 +89,6 @@ class Artiste extends BaseController
 	public function delete($id = 0, $page = 0){
 		$this->artistModels->delete(['id' => $id]);
 
-		return redirect()->to('/Admin/artiste/');
+		return redirect()->to('/Admin/Role/');
 	}
 }
